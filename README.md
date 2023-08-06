@@ -49,3 +49,6 @@ bash backup_git.sh --help
 ## Authors
 
 - Alessandro Pietrantonio <pietrantonio.alessandro@gmail.com>
+
+## TODO
+- [ ] Create restore bash script
