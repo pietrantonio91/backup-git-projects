@@ -10,6 +10,7 @@ usage() {
 
 # Variable to check if the user wants to run Git commands
 run_git=false
+run_zip=false
 
 # Parse command-line arguments
 while [[ $# -gt 0 ]]; do
@@ -17,6 +18,10 @@ while [[ $# -gt 0 ]]; do
     case $key in
         --git)
             run_git=true
+            shift
+            ;;
+        --zip)
+            run_zip=true
             shift
             ;;
         -h|--help)
@@ -65,9 +70,12 @@ mkdir -p "$destination_dir"
 
 find "$source_dir" -type d -name ".git" -not -path "*/.git/*" | while read -r git_dir; do
     copy_git_files
+
+    echo "Folders structure and .git folders have been copied to $destination_dir"
     
     # Check if the user wants to run Git commands
     if [ "$run_git" = true ]; then
+        echo "Run Git commands in $destination_dir$rel_path to reinitialize the projects"
         # Enter the new projects folders and run Git commands
         cd "$destination_dir$rel_path/.."
         git init
@@ -78,5 +86,16 @@ find "$source_dir" -type d -name ".git" -not -path "*/.git/*" | while read -r gi
         cd "$source_dir"
     fi
 done
+
+# Check if the user wants to run Zip commands
+# Zip the new projects folder and then delete it
+if [ "$run_zip" = true ]; then
+    echo "Run Zip commands in $destination_dir to zip the projects. This may take a while..."
+    cd "$destination_dir" && zip --quiet -r "../backup-git-projects.zip" "./"
+    echo "Zip file has been created in $destination_dir.zip."
+    echo "Cleaning up..."
+    cd ".."
+    rm -rf "$destination_dir"
+fi
 
 echo "Folders structure and .git folders have been copied to $destination_dir"
