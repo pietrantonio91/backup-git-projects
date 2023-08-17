@@ -2,28 +2,14 @@
 
 # Function to display usage and exit
 usage() {
-    echo "Usage: $0 [OPTIONS] [SOURCE_DIR] [DESTINATION_DIR]"
-    echo "Options:"
-    echo "  --git   : Run Git commands to init new project folders, fetch all branches and restart to HEAD"
+    echo "Usage: $0 source_dir [destination_dir]"
     exit 1
 }
-
-# Variable to check if the user wants to run Git commands
-run_git=false
-run_zip=false
 
 # Parse command-line arguments
 while [[ $# -gt 0 ]]; do
     key="$1"
     case $key in
-        --git)
-            run_git=true
-            shift
-            ;;
-        --zip)
-            run_zip=true
-            shift
-            ;;
         -h|--help)
             usage
             ;;
@@ -42,10 +28,15 @@ while [[ $# -gt 0 ]]; do
 done
 
 # Get source directory from command-line argument or use default value
-source_dir="${1:-$HOME/projects}"
+source_dir="${1}"
+# check if ${1} is empty
+if [ -z "$source_dir" ]; then
+    echo "Missing source directory"
+    usage
+fi
 
 # Get destination directory from command-line argument or use default value
-destination_dir="${2:-$HOME/backup-projects}"
+destination_dir="${2:-$HOME/tmp-backup-projects}"
 
 # Function to copy necessary .git files
 copy_git_files() {
@@ -72,30 +63,15 @@ find "$source_dir" -type d -name ".git" -not -path "*/.git/*" | while read -r gi
     copy_git_files
 
     echo "Folders structure and .git folders have been copied to $destination_dir"
-    
-    # Check if the user wants to run Git commands
-    if [ "$run_git" = true ]; then
-        echo "Run Git commands in $destination_dir$rel_path to reinitialize the projects"
-        # Enter the new projects folders and run Git commands
-        cd "$destination_dir$rel_path/.."
-        git init
-        git fetch --all
-        git reset --hard HEAD
-        git clean -fd
-        # Return to the source directory
-        cd "$source_dir"
-    fi
 done
 
 # Check if the user wants to run Zip commands
 # Zip the new projects folder and then delete it
-if [ "$run_zip" = true ]; then
-    echo "Run Zip commands in $destination_dir to zip the projects. This may take a while..."
-    cd "$destination_dir" && zip --quiet -r "../backup-git-projects.zip" "./"
-    echo "Zip file has been created in $destination_dir.zip."
-    echo "Cleaning up..."
-    cd ".."
-    rm -rf "$destination_dir"
-fi
+echo "Zipping the projects. This may take a while..."
+cd "$destination_dir" && zip --quiet -r "../backup-git-projects.zip" "./"
+echo "Zip file has been created in $destination_dir.zip."
+echo "Cleaning up..."
+cd ".."
+rm -rf "$destination_dir"
 
 echo "Folders structure and .git folders have been copied to $destination_dir"
