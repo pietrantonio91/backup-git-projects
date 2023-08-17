@@ -16,6 +16,7 @@ You can use this package to create a backup of your projects that you want to mo
 With the **Backup** script you can create a zip file containing your projects on which you use Git as a versioning system (the script only backs up the .git folders, not the entire project).
 With the **Restore** script, you can rebuild the folder structure of your projects in a folder you specify (on your new computer, for example). The script can also take care of reinitializing your Git projects so you don't have to run `git clone` on all folders.
 
+---
 ## Backup
 
 ```bash
@@ -53,16 +54,25 @@ bash backup_git.sh --help
 - Ensure you have proper permissions to read and write in the source and destination directories.
 - Use this script with **caution**, as it will overwrite any existing files in the **destination directory** if they have the same names.
 
+---
+
 ## Restore
 
 ```bash
-bash restore_backup.sh [SOURCE_ZIP] [DESTINATION_DIR]
+bash restore_backup.sh [options] source_zip destination_dir
 ```
+
+### Options
+
+- `--git`: Reinitialize Git repositories in the destination directory. Default is `false`.
+- `--help`|`-h`: Display usage information.
 
 ### Arguments
 
-- `SOURCE_ZIP` (required): The source zip file containing your projects backup (See: **Backup**).
-- `DESTINATION_DIR` (optional): The destination directory where the projects backup will be unzipped. Default is `$HOME/projects`.
+- `source_zip`: The source zip file containing your projects backup (See: **Backup**).
+- `destination_dir`: The destination directory where the projects backup will be unzipped.
+
+---
 
 ## Authors
 
@@ -71,6 +81,3 @@ bash restore_backup.sh [SOURCE_ZIP] [DESTINATION_DIR]
 ## License
 
 This project is licensed under the GNU General Public License v3 - see the [LICENSE](LICENSE) file for details.
-
-## TODO
-- [ ] Run git commands after restoration
