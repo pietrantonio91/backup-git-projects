@@ -1,5 +1,10 @@
 # Bash Script: Project Backup and Git Init
 
+<p align="center">
+<img alt="Static Badge" src="https://img.shields.io/badge/license-GPL_v3-green">
+<img alt="Static Badge" src="https://img.shields.io/badge/version-v0.0.1-blue">
+</p>
+
 ## Description
 
 This Bash script allows you to create a backup of project directories and optionally initialize Git repositories for each project folder. 
@@ -62,6 +67,10 @@ bash restore_backup.sh [SOURCE_ZIP] [DESTINATION_DIR]
 ## Authors
 
 - Alessandro Pietrantonio <pietrantonio.alessandro@gmail.com>
+
+## License
+
+This project is licensed under the GNU General Public License v3 - see the [LICENSE](LICENSE) file for details.
 
 ## TODO
 - [ ] Run git commands after restoration
